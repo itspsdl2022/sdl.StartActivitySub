@@ -1,18 +1,13 @@
 package jp.ac.titech.itpro.sdl.startactivitysub;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
@@ -45,17 +40,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int reqCode, int resCode, Intent data) {
         Log.d(TAG, "onActivityResult");
-        switch (reqCode) {
-            case REQ_NAME:
-                if (resCode == RESULT_OK) {
-                    String name = data.getStringExtra(InputActivity.NAME_EXTRA);
-                    if (name != null && !name.isEmpty()) {
-                        answer.setText(getString(R.string.answer_format, name));
-                    }
-                } else {
-                    answer.setText(R.string.answer_receive_default);
+        if (reqCode == REQ_NAME) {
+            if (resCode == RESULT_OK) {
+                String name = data.getStringExtra(InputActivity.NAME_EXTRA);
+                if (name != null && !name.isEmpty()) {
+                    answer.setText(getString(R.string.answer_format, name));
                 }
-                break;
+            } else {
+                answer.setText(R.string.answer_receive_default);
+            }
+        } else {
+            super.onActivityResult(reqCode, resCode, data);
         }
     }
 
