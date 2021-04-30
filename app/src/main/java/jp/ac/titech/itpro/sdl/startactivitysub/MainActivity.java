@@ -3,7 +3,6 @@ package jp.ac.titech.itpro.sdl.startactivitysub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -27,13 +26,10 @@ public class MainActivity extends AppCompatActivity {
         answer = findViewById(R.id.main_answer);
 
         Button button = findViewById(R.id.main_button_go);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick");
-                Intent intent = new Intent(MainActivity.this, InputActivity.class);
-                startActivityForResult(intent, REQ_NAME);
-            }
+        button.setOnClickListener(v -> {
+            Log.d(TAG, "onClick");
+            Intent intent = new Intent(MainActivity.this, InputActivity.class);
+            startActivityForResult(intent, REQ_NAME);
         });
     }
 
