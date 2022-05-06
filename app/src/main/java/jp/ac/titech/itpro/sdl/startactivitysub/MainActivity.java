@@ -6,11 +6,12 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
-    private final static int REQ_NAME = 1234;
 
     private TextView answer;
 
@@ -29,26 +30,23 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(v -> {
             Log.d(TAG, "onClick");
             Intent intent = new Intent(MainActivity.this, InputActivity.class);
-            startActivityForResult(intent, REQ_NAME);
+            launcher.launch(intent);
         });
     }
 
-    @Override
-    protected void onActivityResult(int reqCode, int resCode, Intent data) {
-        Log.d(TAG, "onActivityResult");
-        if (reqCode == REQ_NAME) {
-            if (resCode == RESULT_OK) {
-                String name = data.getStringExtra(InputActivity.NAME_EXTRA);
-                if (name != null && !name.isEmpty()) {
-                    answer.setText(getString(R.string.answer_format, name));
+    ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null) {
+                        String name = result.getData().getStringExtra(InputActivity.NAME_EXTRA);
+                        if (name != null && !name.isEmpty()) {
+                            answer.setText(getString(R.string.answer_format, name));
+                        }
+                    }
+                } else {
+                    answer.setText(R.string.answer_receive_default);
                 }
-            } else {
-                answer.setText(R.string.answer_receive_default);
-            }
-        } else {
-            super.onActivityResult(reqCode, resCode, data);
-        }
-    }
+            });
 
     @Override
     protected void onStart() {
